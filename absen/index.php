@@ -99,7 +99,17 @@
                         <?php echo $nmUser; ?>
                         <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="dropdown-submenu <?php ($admAbsen==1)?"":"disabled"; ?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">Pengaturan</span><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?p=adAl">Kalender Kerja</a></li>
+                                <li><a href="index.php?p=adPk">Program/Kegiatan</a></li>
+                                <li><a href="index.php?p=adGj">Gaji</a></li>
+                                <li><a href="index.php?p=adSt">Status Kehadiran</a></li>
+                                <li><a href="index.php?p=adTh">Data Pegawai</a></li>
+                            </ul>
+                        </li>
                         <li><a href="?out=1">Keluar</a></li>
                         <li><a href="?akun=0">Ganti Password</a></li>
                     </ul>
@@ -123,12 +133,14 @@
                     //include 'view_att_all.php';
                 }elseif(getGet("p")=="rGj"){
                     //include 'view_att_all.php';
+                }elseif(getGet("p")=="adAl"){
+                    if($admAbsen==1)include 'kalender.php';
                 }else{
 
                 }
             }else{
-                //include 'view_att.php';
-				include 'kalender.php';
+                include 'view_att.php';
+				//include 'kalender.php';
             }
             ?>
         </div>
@@ -179,4 +191,7 @@
         //alert(monthDiff(curDt,newDt));
         window.location.href=updateUrlGet("dMn",monthDiff(curDt,newDt));
     });
+    $('#kalThn').change(function(){
+		$('#frmThn').submit();
+	});
 </script>

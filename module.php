@@ -157,6 +157,13 @@ function dateDayInt($str){
     return 0;
 }
 
+function dateDayWeekInt($str){
+    if(isDate($str)){
+        return date_format(new \DateTime($str), "N");
+    }
+    return 0;
+}
+
 function updateUrlGet($theVar, $theValue){
     $ret="";
     $url=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 

@@ -212,8 +212,8 @@
     
 </form>
 <div style="text-align: center;border-top-style: solid; border-top-width: 1px; border-top-color: rgba(0,0,0,0.2);padding: 10px">
-    <p>Sudah pernah mendaftar? <a href="?signin=1">Login</a></p>
-    <p>Non-Pegawai Dinas PUPR? <a href="?">Gunakan Token</a></p>
+    <p>Sudah pernah mendaftar? <a href="?signin=1<?php echo (getGet("pg"))?"&pg=".getGet("pg"):""; ?>">Login</a></p>
+    <p>Non-Pegawai Dinas PUPR? <a href="?<?php echo (getGet("pg"))?"pg=".getGet("pg"):""; ?>">Gunakan Token</a></p>
 </div>
 
 <script type="text/javascript">

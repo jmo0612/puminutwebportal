@@ -61,5 +61,6 @@
     
 </form>
 <div style="text-align: center;border-top-style: solid; border-top-width: 1px; border-top-color: rgba(0,0,0,0.2);padding: 10px">
-    <p>Pegawai Dinas PUPR? <a href="?signin=1">Login</a></p>
+    <!-- <p>Pegawai Dinas PUPR? <a href="?signin=1">Login</a></p> -->
+    <p>Pegawai Dinas PUPR? <a href="?signin=1<?php echo (getGet("pg"))?"&pg=".getGet("pg"):""; ?>">Login</a></p>
 </div>

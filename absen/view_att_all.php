@@ -1,5 +1,8 @@
 <?php
 
+    $serverDate=date_create(date("Y-m-d"));
+    $serverDateStr=dateDBFormat(date_format($serverDate,"Y-m-d"));
+
     $deltaMonth=0;
     if(getGet("dMn")){
         $deltaMonth=getGet("dMn");
@@ -51,7 +54,7 @@
     
 
     $sel="";
-    $sqlD="select tgl_kerja, DAY(tgl_kerja) as tgl, is_libur from tb_absen_jam_kerja where MONTH(tgl_kerja)='".$dBln."' and YEAR(tgl_kerja)='".$dThn."' order by tgl_kerja asc";
+    $sqlD="select tgl_kerja, DAY(tgl_kerja) as tgl, is_libur from tb_absen_jam_kerja where MONTH(tgl_kerja)='".$dBln."' and YEAR(tgl_kerja)='".$dThn."' and tgl_kerja<='".$serverDateStr."' order by tgl_kerja asc";
     $resD=$con->query($sqlD);
     if($resD->num_rows>0){
         while($rowD=$resD->fetch_assoc()){

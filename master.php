@@ -8,6 +8,7 @@ $idUser="";
 $nmUser="";
 $emailUser="";
 $urlPropic="";
+$admAbsen=0;
 $triwulan=0;
 $isGuest=FALSE;
 
@@ -32,6 +33,7 @@ function initIndex(){
             $nmUser=$row["nm_user"];
             $emailUser=$row["email_user"];
             $urlPropic=$row["url_foto"];
+            $admAbsen=$row["adm_absen"];
             $res2=$con->query("select * from tb_token where token='".$_SESSION["usrToken"]."'");
             $tokenValid=TRUE;
             if($res2->num_rows>0){
@@ -65,7 +67,7 @@ function initIndex(){
             redirect("login.php?na=1");
         }
     }else{
-        $sqlStr="SELECT `tb_user`.`id_user` AS `id_user`, `tb_user`.`email_user` AS `email_user`, `tb_user`.`pass_user` AS `pass_user`, `tb_user`.`jns_user` AS `jns_user`, `tb_user`.`id_user_tipe` AS `id_user_tipe`, `tb_user`.`token` AS `token`, `tb_user`.`aktif` AS `aktif`, `tb_user`.`nm_user` AS `nm_user`, `tb_user`.`url_foto` AS `url_foto`, `tb_token`.`require_login` AS `require_login`, `tb_token`.`limited_time` AS `limited_time`, `tb_token`.`expire_date` AS `expire_date`, `tb_token`.`tahun_akses` AS `tahun_akses`, `tb_token`.`triwulan_akses` AS `triwulan_akses` FROM `puprarsip`.`tb_user` AS `tb_user`, `puprarsip`.`tb_token` AS `tb_token` WHERE `tb_user`.`token` = `tb_token`.`token`";
+        $sqlStr="SELECT `tb_user`.`id_user` AS `id_user`, `tb_user`.`email_user` AS `email_user`, `tb_user`.`pass_user` AS `pass_user`, `tb_user`.`jns_user` AS `jns_user`, `tb_user`.`id_user_tipe` AS `id_user_tipe`, `tb_user`.`token` AS `token`, `tb_user`.`aktif` AS `aktif`, `tb_user`.`nm_user` AS `nm_user`, `tb_user`.`url_foto` AS `url_foto`, `tb_user`.`adm_absen` AS `adm_absen`, `tb_token`.`require_login` AS `require_login`, `tb_token`.`limited_time` AS `limited_time`, `tb_token`.`expire_date` AS `expire_date`, `tb_token`.`tahun_akses` AS `tahun_akses`, `tb_token`.`triwulan_akses` AS `triwulan_akses` FROM `puprarsip`.`tb_user` AS `tb_user`, `puprarsip`.`tb_token` AS `tb_token` WHERE `tb_user`.`token` = `tb_token`.`token`";
         $sqlStr.=" and tb_user.id_user='".$_SESSION["usrId"]."' and tb_user.aktif=1";
         $res=$con->query($sqlStr);
         if($res->num_rows>0){
@@ -74,6 +76,7 @@ function initIndex(){
             $nmUser=$row["nm_user"];
             $emailUser=$row["email_user"];
             $urlPropic=$row["url_foto"];
+            $admAbsen=$row["adm_absen"];
             if(getPost("tahun")!=NULL){
                 $tahun= getPost("tahun");
             }else{

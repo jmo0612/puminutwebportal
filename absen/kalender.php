@@ -1,10 +1,42 @@
 <?php
 
-	$curThn=dateYearInt(dateDBFormat(date_format(date_create(date("Y-m-d")),"Y-m-d")));
 	
-	if(getPost("kYr")){
-        $curThn=getPost("kYr");
-    }
+
+	$arrDay=array("Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu");
+	$arrDayCb=array("cbMing","cbSen","cbSel","cbRab","cbKam","cbJum","cbSab");
+	$arrDayCiH=array("ciHMing","ciHSen","ciHSel","ciHRab","ciHKam","ciHJum","ciHSab");
+	$arrDayCiM=array("ciMMing","ciMSen","ciMSel","ciMRab","ciMKam","ciMJum","ciMSab");
+	$arrDayCoH=array("coHMing","coHSen","coHSel","coHRab","coHKam","coHJum","coHSab");
+	$arrDayCoM=array("coMMing","coMSen","coMSel","coMRab","coMKam","coMJum","coMSab");
+	//echo getPost("genThn");
+	if(getPost("genThn")){
+		$wDate=date_create(getPost("genThn")."-01-01");
+		$wDateDBStr=date_format($wDate,"Y-m-d");
+		$sqlUp="insert into tb_absen_jam_kerja(tgl_kerja,is_libur,jam_masuk,jam_keluar,ket_tgl_kerja) values ";
+		while(dateYearInt($wDateDBStr)==getPost("genThn")){
+			
+			$theDayInd=dateDayWeekInt(date_format($wDate,"Y-m-d"));
+			if($theDayInd==7)$theDayInd=0;
+			
+			$sqlUp.="('".$wDateDBStr."','".(getPost($arrDayCb[$theDayInd])?0:1)."','".date_format(date_create($wDateDBStr." ".getPost($arrDayCiH[$theDayInd]).":".getPost($arrDayCiM[$theDayInd]).":00"),"Y-m-d H:i:s")."','".date_format(date_create($wDateDBStr." ".getPost($arrDayCoH[$theDayInd]).":".getPost($arrDayCoM[$theDayInd]).":00"),"Y-m-d H:i:s")."',''),";
+			//$sqlUp.="values('"."XXX"."','".(getPost($arrDayCb[$theDayInd])?1:0)."','YYY','".date_format(date_create(date_format($wDate,"Y-m-d")." ".getPost($arrDayCoH[$theDayInd]).":".getPost($arrDayCoM[$theDayInd]).":00"),"Y-m-d H:i:s")."','')";
+			
+			
+			$wDate->modify("+1 day");
+			$wDateDBStr=date_format($wDate,"Y-m-d");
+		}
+		$sqlUp=substr($sqlUp,0,-1);
+		$con->query($sqlUp);
+	}
+
+
+	$curThn=dateYearInt(dateDBFormat(date_format(date_create(date("Y-m-d")),"Y-m-d")));
+	//echo getPost("kalThn");
+	if(getPost("kalThn")){
+			
+			$curThn=getPost("kalThn");
+	}	
+		
 
     $deltaMonth=0;
     if(getGet("dMn")){
@@ -60,15 +92,18 @@
 <div  class="page-header" align="center">
 	<div align="center">
 		<h1>Kalender Kerja</h1>
-		<form class="form-inline">
+		<form class="form-inline" id="frmThn" method="post">
 		  <div class="form-group mb-2">
 			<label for="kalThn" class="sr-only">Tahun</label>
-			<input type="number" value="<?php echo $curThn; ?>" class="form-control" id="kalThn" placeholder="Tahun" min="1">
+			<input type="number" value="<?php echo $curThn; ?>" class="form-control" id="kalThn" name="kalThn" placeholder="Tahun" min="1">
 		  </div>
-		  <button type="submit" class="btn btn-primary mb-2">Buat Kalender</button>
+		  <!-- <button type="submit" class="btn btn-primary mb-2">Buat Kalender</button> -->
 		</form>
 	</div>
-    <div align="left">
+	<?php
+    if($res->num_rows>0){
+	?>
+	<div align="left">
 		<nav aria-label="Date navigation">
 			<ul class="pagination">
 				<li>
@@ -86,9 +121,16 @@
 			</ul>
 		</nav>
 	</div>
-    
+  <?php
+    }
+	?>  
 </div>
 
+
+
+<?php
+    if($res->num_rows>0){
+?>
 <table class="table table-striped table-bordered table-fix">
     <thead>
         <tr>
@@ -102,186 +144,113 @@
     </thead>
     <tbody>
 <?php
-    if($res->num_rows>0){
-        while($row=$res->fetch_assoc()){
-            //echo $row["nm_thl"]." --------> ".$row["kode_rule"]."<br>";
-            ?>
-        <tr>
-            <th scope="row"><?php echo dateDayInt($row["tgl_kerja"]); ?></td>
-            <td><?php echo dateDayWeekMin($row["tgl_kerja"]); ?></td>
-            <td><?php echo dateClockMin($row["jam_masuk"]); ?></td>
-			<td><?php echo dateClockMin($row["jam_keluar"]); ?></td>
-			<td><?php echo $row["ket_tgl_kerja"]; ?></td>
-			<td><?php echo $row["is_libur"]; ?></td>
-        </tr>    
-            <?php
-        }
+				while($row=$res->fetch_assoc()){
+					//echo $row["nm_thl"]." --------> ".$row["kode_rule"]."<br>";
+					?>
+				<tr>
+						<th scope="row"><?php echo dateDayInt($row["tgl_kerja"]); ?></td>
+						<td><?php echo dateDayWeekMin($row["tgl_kerja"]); ?></td>
+						<td><?php echo dateClockMin($row["jam_masuk"]); ?></td>
+						<td><?php echo dateClockMin($row["jam_keluar"]); ?></td>
+						<td><?php echo $row["ket_tgl_kerja"]; ?></td>
+						<td><?php echo $row["is_libur"]; ?></td>
+				</tr>    
+					<?php
+				}
+?>
+    </tbody>
+</table>
+<?php
     }else{
 ?>
 
-<form>
-	<input type="hidden" id="genThn" value="<?php echo $curThn;?>">
-  <div class="form-group row">
-    <div>Hari Libur:</div>
-	
-	
-	
-	
-	
-	
-	
-	
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hMing" >
-        <label class="form-check-label" for="gridCheck1">
-          Minggu
-        </label>
-      </div>
-    </div>
-	<div class="form-group row">
-		<label for="jCiMing" class="col-sm-2 col-form-label">Check-in Jam</label>
-		<div class="col-sm-2">
-			<select class="form-control" id="jCiMing" value="08">
-				<?php
-					for($i=0;$i<24;$i++){
-						echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-					}
-				?>
-			</select>
-		</div>
+<div>Hari Kerja:</div>
+<form id="frmGen" method="post">
+	<input type="hidden" name="genThn" id="genThn" value="<?php echo $curThn;?>">
+	<table>
+<?php
 		
-	</div>
-	<div class="form-group row">
-		<label for="mCiMing">Menit</label>
-		<select class="form-control" id="mCiMing" value="08">
-			<?php
-				for($i=0;$i<60;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	<div class="form-group row">
-		<label for="jCoMing">Check-out Jam</label>
-		<select class="form-control" id="jCoMing" value="08">
-			<?php
-				for($i=0;$i<24;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	<div class="form-group row">
-		<label for="mCoMing">Menit</label>
-		<select class="form-control" id="mCoMing" value="08">
-			<?php
-				for($i=0;$i<60;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
+		for($i=0;$i<7;$i++){
+?>
+		<tr>
+			<td rowspan="2" style="padding:3px;border-left:1px solid;border-top:1px solid;border-bottom:1px solid">
+				<input class="form-check-input" type="checkbox" name="<?php echo $arrDayCb[$i];?>" id="<?php echo $arrDayCb[$i];?>" <?php if($i!=0 && $i!=6)echo "checked"; ?> >
+			</td>
+			<td rowspan="2" style="padding:1px;border-top:1px solid;;border-bottom:1px solid"><?php echo $arrDay[$i]; ?></td>
+			<td rowspan="2" style="border-top:1px solid;border-right:1px solid;border-bottom:1px solid">&nbsp;</td>
+			<td style="padding:3px;text-align:right;border-top:1px solid">Check-in : </td>
+			<td style="padding:3px;border-top:1px solid">Jam</td>
+			<td style="padding:3px;border-top:1px solid">
+				<select class="form-control" name="<?php echo $arrDayCiH[$i]; ?>" id="<?php echo $arrDayCiH[$i]; ?>" value="<?php if($i==5){echo "07";}else{echo "08";} ?>">
+					<?php
+						$hh=8;
+						if($i==5)$hh=7;
+						for($j=0;$j<24;$j++){
+							echo "<option>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							if($j==$hh){
+								echo "<option selected>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							}
+							
+						}
+					?>
+				</select>
+			</td>
+			<td style="padding:3px;border-top:1px solid">Menit</td>
+			<td style="padding:3px;border-top:1px solid;border-right:1px solid">
+				<select class="form-control" name="<?php echo $arrDayCiM[$i]; ?>" id="<?php echo $arrDayCiM[$i]; ?>" value="00">
+					<?php
+						for($j=0;$j<60;$j++){
+							echo "<option>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							if($j==0){
+								echo "<option selected>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							}
+						}
+					?>
+				</select>
+			</td>
+		</tr>
+			
+		<tr>
+			<td style="padding:3px;text-align:right">Check-out : </td>
+			<td style="padding:3px">Jam</td>
+			<td style="padding:3px">
+				<select class="form-control" name="<?php echo $arrDayCoH[$i]; ?>" id="<?php echo $arrDayCoH[$i]; ?>" value="16">
+					<?php
+						$hh=16;
+						if($i==5)$hh=12;
+						for($j=0;$j<24;$j++){
+							echo "<option>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							if($j==$hh){
+								echo "<option selected>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							}
+						}
+					?>
+				</select>
+			</td>
+			<td style="padding:3px">Menit</td>
+			<td style="padding:3px;border-right:1px solid">
+				<select class="form-control" name="<?php echo $arrDayCoM[$i]; ?>" id="<?php echo $arrDayCoM[$i]; ?>" value="00">
+					<?php
+						$mm=0;
+						if($i==5)$mm=30;
+						for($j=0;$j<60;$j++){
+							echo "<option>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							if($j==$mm){
+								echo "<option selected>".str_pad($j, 2, '0', STR_PAD_LEFT)."</option>";
+							}
+						}
+					?>
+				</select>
+			</td>
+		</tr>
+		<tr><td colspan="8">&nbsp;</td></tr>
+<?php
+		}
+?>
+			
+	</table>
+
 	
-	
-	
-	
-	
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hSen">
-        <label class="form-check-label" for="gridCheck1">
-          Senin
-        </label>
-      </div>
-    </div>
-	<div class="form-group row">
-		<label for="jCiSen">Check-in Jam</label>
-		<select class="form-control" id="jCiSen" value="08">
-			<?php
-				for($i=0;$i<24;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	<div class="form-group row">
-		<label for="mCiSen">Menit</label>
-		<select class="form-control" id="mCiSen" value="08">
-			<?php
-				for($i=0;$i<60;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	<div class="form-group row">
-		<label for="jCoSen">Check-out Jam</label>
-		<select class="form-control" id="jCoSen" value="08">
-			<?php
-				for($i=0;$i<24;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	<div class="form-group row">
-		<label for="mCoSen">Menit</label>
-		<select class="form-control" id="mCoSen" value="08">
-			<?php
-				for($i=0;$i<60;$i++){
-					echo "<option>".str_pad($i, 2, '0', STR_PAD_LEFT)."</option>";
-				}
-			?>
-		</select>
-	</div>
-	
-	
-	
-	
-	
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hSel">
-        <label class="form-check-label" for="gridCheck1">
-          Selasa
-        </label>
-      </div>
-    </div>
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hRab">
-        <label class="form-check-label" for="gridCheck1">
-          Rabu
-        </label>
-      </div>
-    </div>
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hKam">
-        <label class="form-check-label" for="gridCheck1">
-          Kamis
-        </label>
-      </div>
-    </div>
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hJum">
-        <label class="form-check-label" for="gridCheck1">
-          Jumat
-        </label>
-      </div>
-    </div>
-	<div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="hSab">
-        <label class="form-check-label" for="gridCheck1">
-          Sabtu
-        </label>
-      </div>
-    </div>
-	
-  </div>
   <div class="form-group row">
     <div class="col-sm-10">
       <button type="submit" class="btn btn-primary">Generate</button>
@@ -292,7 +261,36 @@
 
 <?php
 	}
-?>    
-    </tbody>
-</table>
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
      
