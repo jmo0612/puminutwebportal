@@ -3,18 +3,6 @@
     include 'konek.php';
     include 'master.php';
     include 'module.php';
-
-    if(getGet("pg")){
-        if(getGet("pg")=="ars"){
-            $sPage="arsip";
-        }elseif(getGet("pg")=="abs"){
-            $sPage="absen";
-        }else{
-            $sPage="";
-        }
-    }else{
-        $sPage="";
-    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,20 +15,20 @@
         <meta name="author" content="">
         <link rel="icon" href="images/favicon.ico">
 
-        <title>Dinas PUPR Minut</title>
+        <title>e-Archive PUPR</title>
 
         <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+        <link href="bootstrap-3.3.7-dist/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
         <!-- Custom styles for this template -->
-        <link href="css/dashboard.css" rel="stylesheet">
+        <link href="bootstrap-3.3.7-dist/css/dashboard.css" rel="stylesheet">
 
         <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
         <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-        <script src="js/ie-emulation-modes-warning.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/ie-emulation-modes-warning.js"></script>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -49,7 +37,7 @@
         <![endif]-->
     </head>
 
-    <body style="background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');background-size: cover; background-repeat: no-repeat">
+    <body style="background-image: url('images/arsipbg.jpg');background-size: cover; background-repeat: no-repeat">
         <div class="container modal-dialog">
             <div class="panel panel-default" style="background-color:rgba(0,0,0,0.5);border: none">
                 <div class="panel-body" style="color: white">
@@ -72,7 +60,7 @@
                                         if($con->query($sqlUp)){
                                             $_SESSION["usrId"]=$row["id_user"];
                                             //echo 'kewde';
-                                            redirect($sPage);
+                                            redirect("");
                                         }else{
                                             //echo 'tolor';
                                             redirect("login.php");
@@ -113,14 +101,14 @@
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
-        <script src="js/jquery.min.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
         <!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>-->
-        <script src="js/bootstrap.min.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
         <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-        <script src="js/holder.min.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/holder.min.js"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="js/ie10-viewport-bug-workaround.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
         
-        <script src="js/global.js"></script>
+        <script src="bootstrap-3.3.7-dist/js/global.js"></script>
     </body>
 </html>

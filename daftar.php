@@ -42,7 +42,7 @@
             $htmlMsg.='<p>Terima kasih telah melakukan pendaftaran akun pada aplikasi e-Archive PUPR Minut ';
             $htmlMsg.='tanggal '. dateMedium(date('Y-m-d')) .'. Untuk melanjutkan terlebih dahulu pastikan anda terhubung pada jaringan lokal Dinas Pekerjaan Umum dan Penataan Ruang Kabupaten Minahasa Utara.</p>';
             $theAuth= md5($eId. date("Y-m-d H:i:s"). rand(0, 1000000));
-            $htmlMsg.='<p>Silahkan klik di <a href="'. getUrl("login.php?auth=").$theAuth.'&pg='.getGet("pg").'">sini</a> untuk aktivasi akun anda. Terima kasih.</p>';
+            $htmlMsg.='<p>Silahkan klik di <a href="'. getUrl("login.php?auth=").$theAuth.'">sini</a> untuk aktivasi akun anda. Terima kasih.</p>';
             $mail->Body    = $htmlMsg;
             $mail->AltBody = 'Link aktivasi akun anda: '. getUrl("login.php?auth=").$theAuth;
 
@@ -212,8 +212,8 @@
     
 </form>
 <div style="text-align: center;border-top-style: solid; border-top-width: 1px; border-top-color: rgba(0,0,0,0.2);padding: 10px">
-    <p>Sudah pernah mendaftar? <a href="?signin=1&pg=<?php echo getGet("pg"); ?>">Login</a></p>
-    <p>Non-Pegawai Dinas PUPR? <a href="?pg=<?php echo getGet("pg"); ?>">Gunakan Token</a></p>
+    <p>Sudah pernah mendaftar? <a href="?signin=1">Login</a></p>
+    <p>Non-Pegawai Dinas PUPR? <a href="?">Gunakan Token</a></p>
 </div>
 
 <script type="text/javascript">

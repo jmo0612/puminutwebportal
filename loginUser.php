@@ -1,19 +1,19 @@
 <h2>Masuk</h2>
 <p>(Khusus pegawai Dinas PUPR Minut)</p>
-<p style="text-align: right">Non-Pegawai Dinas PUPR? <a href="?pg=<?php echo getGet("pg"); ?>">Gunakan Token</a></p>
+<p style="text-align: right">Non-Pegawai Dinas PUPR? <a href="?">Gunakan Token</a></p>
 <?php
     if(getPost("nip")!=NULL && getPost("pass")!=NULL){
         $res=$con->query("select * from tb_user where email_user='" . getPost("nip")."' and pass_user='" . md5(getPost("pass"))."' and aktif=1");
         if($res->num_rows>0){
             $row=$res->fetch_assoc();
             $_SESSION["usrId"]=$row["id_user"];
-            redirect($sPage);
+            redirect("");
         }else{
             $res=$con->query("select * from tb_user where id_user='" . getPost("nip")."' and pass_user='" . md5(getPost("pass"))."' and aktif=1");
             if($res->num_rows>0){
                 $row=$res->fetch_assoc();
                 $_SESSION["usrId"]=$row["id_user"];
-                redirect($sPage);
+                redirect("");
             }else{
                 ?>
 <div class="alert alert-danger" role="alert">Login gagal. Periksa kembali ID dan Password anda.</div>                    
@@ -41,6 +41,6 @@
     
 </form>
 <div style="text-align: center;border-top-style: solid; border-top-width: 1px; border-top-color: rgba(0,0,0,0.2);padding: 10px">
-    Belum punya akun? <a href="login.php?signup=1&pg=<?php echo getGet("pg"); ?>">Daftar</a><br>
-    <a href="login.php?forget=1&pg=<?php echo getGet("pg"); ?>">Lupa password?</a>
+    Belum punya akun? <a href="login.php?signup=1">Daftar</a><br>
+    <a href="login.php?forget=1">Lupa password?</a>
 </div>

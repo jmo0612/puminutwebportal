@@ -127,7 +127,8 @@
 
                 }
             }else{
-                include 'view_att.php';
+                //include 'view_att.php';
+				include 'kalender.php';
             }
             ?>
         </div>

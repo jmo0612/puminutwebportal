@@ -150,6 +150,13 @@ function dateYearInt($str){
     return 0;
 }
 
+function dateDayInt($str){
+    if(isDate($str)){
+        return date_format(new \DateTime($str), "j");
+    }
+    return 0;
+}
+
 function updateUrlGet($theVar, $theValue){
     $ret="";
     $url=(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 

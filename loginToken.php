@@ -27,7 +27,7 @@
             }
             if($validToken){
                 $_SESSION["usrToken"]=$tok;
-                redirect($sPage);
+                redirect("");
             }else{
                 ?>
 <div class="alert alert-danger" role="alert">Token kedaluwarsa.</div>                    
@@ -61,5 +61,5 @@
     
 </form>
 <div style="text-align: center;border-top-style: solid; border-top-width: 1px; border-top-color: rgba(0,0,0,0.2);padding: 10px">
-    <p>Pegawai Dinas PUPR? <a href="?signin=1&pg=<?php echo getGet("pg"); ?>">Login</a></p>
+    <p>Pegawai Dinas PUPR? <a href="?signin=1">Login</a></p>
 </div>
