@@ -7,13 +7,13 @@
         if($res->num_rows>0){
             $row=$res->fetch_assoc();
             $_SESSION["usrId"]=$row["id_user"];
-            redirect("");
+            redirect("arsip");
         }else{
             $res=$con->query("select * from tb_user where id_user='" . getPost("nip")."' and pass_user='" . md5(getPost("pass"))."' and aktif=1");
             if($res->num_rows>0){
                 $row=$res->fetch_assoc();
                 $_SESSION["usrId"]=$row["id_user"];
-                redirect("");
+                redirect("arsip");
             }else{
                 ?>
 <div class="alert alert-danger" role="alert">Login gagal. Periksa kembali ID dan Password anda.</div>                    
