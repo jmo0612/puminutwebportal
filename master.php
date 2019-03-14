@@ -16,7 +16,7 @@ $lockTahun=FALSE;
 $lockTriwulan=FALSE;
 
 function initIndex(){
-    global $tahun,$idUser,$nmUser,$emailUser,$urlPropic,$triwulan,$extraUrl,$isGuest,$lockTahun,$lockTriwulan,$con;
+    global $tahun,$idUser,$nmUser,$emailUser,$urlPropic,$triwulan,$admAbsen,$isGuest,$lockTahun,$lockTriwulan,$con;
     if(isset($_SESSION["usrToken"])){
         $res=$con->query("select * from tb_user where token='" . $_SESSION["usrToken"]."' and aktif=1");
         if($res->num_rows==0){

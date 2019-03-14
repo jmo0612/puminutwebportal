@@ -141,7 +141,7 @@
             ON
             all_date.tgl_kerja=att_data.the_date AND all_date.id_thl=att_data.id_thl ) AS att0
             WHERE is_libur='0' and nonaktif_thl='0' 
-            GROUP BY id_thl";
+            GROUP BY id_thl order by nm_thl asc";
 
     //echo $sql;
     $res=$con->query($sql);
@@ -171,7 +171,7 @@
     </nav>
 </div>
 
-<table class="table table-striped table-bordered table-fix">
+<table class="table table-striped table-bordered table-fit">
     <thead>
         <tr>
             <th rowspan="2">#</th>

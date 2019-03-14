@@ -31,6 +31,7 @@
 
 
 	$curThn=dateYearInt(dateDBFormat(date_format(date_create(date("Y-m-d")),"Y-m-d")));
+	$curBln=dateMonthInt(dateDBFormat(date_format(date_create(date("Y-m-d")),"Y-m-d")));
 	//echo getPost("kalThn");
 	if(getPost("kalThn")){
 			
@@ -46,20 +47,23 @@
     $mInterval= new DateInterval("P".abs($deltaMonth)."M");
     if($deltaMonth<0)$mInterval->invert=abs($deltaMonth);
 
-    $curDate=date_create($curThn."-01-01");
+    $curDate=date_create($curThn."-".str_pad($curBln,2,"0",STR_PAD_LEFT)."-01");
 	
 	
     if($deltaMonth!=0)date_add($curDate,$mInterval);
 
-    $curDateDBStr=dateDBFormat(date_format($curDate,"Y-m-d"));
+		$curDateDBStr=dateDBFormat(date_format($curDate,"Y-m-d"));
+		
+		
 
     //echo dateMonthInt($curDateDBStr);
 
     function findMonth($next=true){
-        global $curDateDBStr,$con,$deltaMonth;
+				global $curDateDBStr,$con,$deltaMonth;
+				//echo $curDateDBStr;
         $ret=$deltaMonth;
-        $sql="select * from tb_absen_jam_kerja where is_libur='0' and Year(tgl_kerja)='".dateYearInt($curDateDBStr)."' and Month(tgl_kerja) > '".dateMonthInt($curDateDBStr)."' order by tgl_kerja asc";
-        if($next==false)$sql="select * from tb_absen_jam_kerja where is_libur='0' and Year(tgl_kerja)='".dateYearInt($curDateDBStr)."' and Month(tgl_kerja) < '".dateMonthInt($curDateDBStr)."' order by tgl_kerja desc";
+        $sql="select * from tb_absen_jam_kerja where Year(tgl_kerja)='".dateYearInt($curDateDBStr)."' and Month(tgl_kerja) > '".dateMonthInt($curDateDBStr)."' order by tgl_kerja asc";
+        if($next==false)$sql="select * from tb_absen_jam_kerja where Year(tgl_kerja)='".dateYearInt($curDateDBStr)."' and Month(tgl_kerja) < '".dateMonthInt($curDateDBStr)."' order by tgl_kerja desc";
         $res=$con->query($sql);
         if($res->num_rows>0){
             $row=$res->fetch_assoc();
@@ -81,9 +85,8 @@
     //echo $sql;
     $res=$con->query($sql);
 	
-	if(getPost("genThn")){
-		
-	}
+		$curThn=dateYearInt($curDateDBStr);
+		$curBln=dateMonthInt($curDateDBStr);
     
 ?>
 
@@ -92,7 +95,7 @@
 <div  class="page-header" align="center">
 	<div align="center">
 		<h1>Kalender Kerja</h1>
-		<form class="form-inline" id="frmThn" method="post">
+		<form class="form-inline" id="frmThn" method="post" action="?p=adAl">
 		  <div class="form-group mb-2">
 			<label for="kalThn" class="sr-only">Tahun</label>
 			<input type="number" value="<?php echo $curThn; ?>" class="form-control" id="kalThn" name="kalThn" placeholder="Tahun" min="1">
@@ -131,30 +134,34 @@
 <?php
     if($res->num_rows>0){
 ?>
-<table class="table table-striped table-bordered table-fix">
+<table class="table table-bordered table-hover table-fit">
     <thead>
-        <tr>
-            <th>Tgl</th>
-            <th>Hari</th>
-            <th>Check-in</th>
-			<th>Check-out</th>
-			<th>Ket</th>
-			<th>Libur?</th>
-        </tr>
+      <tr>
+				<th style="text-align:center">Tgl</th>
+				<th style="text-align:center">Hari</th>
+				<th style="text-align:center">in</th>
+				<th style="text-align:center">out</th>
+				<th style="text-align:center">Ket</th>
+				<th style="text-align:center">Hari<br>Kerja</th>
+      </tr>
     </thead>
     <tbody>
 <?php
 				while($row=$res->fetch_assoc()){
 					//echo $row["nm_thl"]." --------> ".$row["kode_rule"]."<br>";
 					?>
-				<tr>
-						<th scope="row"><?php echo dateDayInt($row["tgl_kerja"]); ?></td>
-						<td><?php echo dateDayWeekMin($row["tgl_kerja"]); ?></td>
-						<td><?php echo dateClockMin($row["jam_masuk"]); ?></td>
-						<td><?php echo dateClockMin($row["jam_keluar"]); ?></td>
-						<td><?php echo $row["ket_tgl_kerja"]; ?></td>
-						<td><?php echo $row["is_libur"]; ?></td>
+	
+				<tr <?php echo ($row["is_libur"])?'class="danger"':''; ?> onclick="window.location='<?php echo getUrl('absen/index.php?p=detHk&edHk='.str_replace('-','',$row['tgl_kerja']).((getGet('dMn'))?'&dMn='.getGet('dMn'):'')); ?>';">
+				
+						<th style="text-align:center" scope="row"><?php echo dateDayInt($row["tgl_kerja"]); ?></td>
+						<td style="text-align:center"><?php echo dateDayWeekMin($row["tgl_kerja"]); ?></td>
+						<td style="text-align:center"><?php echo dateClockMin($row["jam_masuk"]); ?></td>
+						<td style="text-align:center"><?php echo dateClockMin($row["jam_keluar"]); ?></td>
+						<td style="text-align:center"><?php echo $row["ket_tgl_kerja"]; ?></td>
+						<td style="text-align:center"><?php echo ($row["is_libur"])?"<span class='glyphicon glyphicon-remove' aria-hidden='true' style='color:red'></span>":"<span class='glyphicon glyphicon-ok' aria-hidden='true' style='color:green'></span>"; ?></td>
+				
 				</tr>    
+				
 					<?php
 				}
 ?>

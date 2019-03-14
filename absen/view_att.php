@@ -92,7 +92,7 @@
             check_in.pagi <> check_out.sore) AS att_data
             ON
             all_date.tgl_kerja=att_data.the_date AND all_date.id_thl=att_data.id_thl ) AS att0
-            WHERE tgl_kerja='". $curDateDBStr ."' and is_libur='0' and nonaktif_thl='0'";
+            WHERE tgl_kerja='". $curDateDBStr ."' and tgl_kerja<='".date("Y-m-d")."' and is_libur='0' and nonaktif_thl='0' order by nm_thl asc";
 
     $res=$con->query($sql);
     

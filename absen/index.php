@@ -24,7 +24,7 @@
     
     //initIndex();
     
-    
+    //echo $admAbsen;
     
 ?>
 <!DOCTYPE html>
@@ -43,6 +43,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../bootstrap-date-picker-dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
 
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -83,6 +84,7 @@
         </div>
         <a class="navbar-brand" href="?">e-Absen</a>
         <div id="navbar" class="navbar-collapse collapse">
+            <!--  navbar-right -->
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Rekapan <span class="caret"></span></a>
@@ -93,16 +95,16 @@
                     </ul>
                 </li>
 
-                <li class="dropdown">
+                <li class="dropdown pull-left">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <img src="<?php echo "../".$urlPropic; ?>" class="img-rounded"  width="26px" height="26px">
                         <?php echo $nmUser; ?>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li class="dropdown-submenu <?php ($admAbsen==1)?"":"disabled"; ?>">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">Pengaturan</span><span class="caret"></span></a>
-                            <ul class="dropdown-menu">
+                        <li class="dropdown-submenu pull-left <?php ($admAbsen==1)?"":"disabled"; ?>">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pengaturan</a>
+                            <ul class="dropdown-menu" style="position:absolute;right:100%">
                                 <li><a href="index.php?p=adAl">Kalender Kerja</a></li>
                                 <li><a href="index.php?p=adPk">Program/Kegiatan</a></li>
                                 <li><a href="index.php?p=adGj">Gaji</a></li>
@@ -135,6 +137,8 @@
                     //include 'view_att_all.php';
                 }elseif(getGet("p")=="adAl"){
                     if($admAbsen==1)include 'kalender.php';
+                }elseif(getGet("p")=="detHk"){
+                    if($admAbsen==1)include 'det_kalender.php';
                 }else{
 
                 }
@@ -194,4 +198,17 @@
     $('#kalThn').change(function(){
 		$('#frmThn').submit();
 	});
+
+
+    (function($){
+        $(document).ready(function(){
+            $('ul.dropdown-menu [data-toggle=dropdown]').on('mouseover', function(event) {
+                event.preventDefault(); 
+                event.stopPropagation(); 
+                $(this).parent().siblings().removeClass('open');
+                $(this).parent().toggleClass('open');
+            });
+        });
+    })(jQuery);
+    /* http://www.bootply.com/nZaxpxfiXz */
 </script>
