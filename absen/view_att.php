@@ -52,14 +52,14 @@
             tb_absen_jam_kerja.jam_masuk as jam_masuk,
             tb_absen_jam_kerja.jam_keluar as jam_keluar,
             tb_absen_jam_kerja.ket_tgl_kerja as ket_tgl_kerja,
-            tb_absen_thl.id_thl as id_thl,
-            tb_absen_thl.nm_thl as nm_thl,
-            tb_absen_thl.nonaktif_thl as nonaktif_thl
+            tb_absen_thl_bulan.id_thl as id_thl,
+            tb_absen_thl_bulan.nm_thl as nm_thl,
+            tb_absen_thl_bulan.nonaktif_thl as nonaktif_thl
             FROM
             tb_absen_jam_kerja
             cross JOIN
-            tb_absen_thl
-            order by tgl_kerja asc, id_thl asc ) AS all_date
+            tb_absen_thl_bulan
+            ON tb_absen_thl_bulan.Thn='".dateYearInt($curDateDBStr)."' AND tb_absen_thl_bulan.bln='".dateMonthInt($curDateDBStr)."' order by tgl_kerja asc, id_thl asc ) AS all_date
             LEFT JOIN
             (SELECT
             check_in.the_date AS the_date,
@@ -121,7 +121,7 @@
     </nav>
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>#</th>
@@ -138,7 +138,7 @@
         while($row=$res->fetch_assoc()){
             //echo $row["nm_thl"]." --------> ".$row["kode_rule"]."<br>";
             ?>
-        <tr>
+        <tr onclick="window.location='<?php echo getUrl('absen/index.php?p=detAtt&idThl='.$row['id_thl']); ?>';">
             <th scope="row"><?php echo $urt; ?></td>
             <td><?php echo $row["nm_thl"]; ?></td>
             <td><?php echo dateClock($row["masuk"]); ?></td>

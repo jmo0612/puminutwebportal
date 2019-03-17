@@ -57,6 +57,8 @@
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="../bootstrap-3.3.7-dist/js/ie-emulation-modes-warning.js"></script>
     
+    
+    
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -106,6 +108,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pengaturan</a>
                             <ul class="dropdown-menu" style="position:absolute;right:100%">
                                 <li><a href="index.php?p=adAl">Kalender Kerja</a></li>
+                                <li><a href="index.php?p=dfThl">Daftar THL</a></li>
                                 <li><a href="index.php?p=adPk">Program/Kegiatan</a></li>
                                 <li><a href="index.php?p=adGj">Gaji</a></li>
                                 <li><a href="index.php?p=adSt">Status Kehadiran</a></li>
@@ -139,6 +142,10 @@
                     if($admAbsen==1)include 'kalender.php';
                 }elseif(getGet("p")=="detHk"){
                     if($admAbsen==1)include 'det_kalender.php';
+                }elseif(getGet("p")=="detAtt"){
+                    if($admAbsen==1)include 'det_att.php';
+                }elseif(getGet("p")=="dfThl"){
+                    if($admAbsen==1)include 'daftar_thl.php';
                 }else{
 
                 }
@@ -155,6 +162,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+    <script src="jmoCalendar/calendar.js"></script>
     <!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>-->
     <script src="../bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script src="../bootstrap-date-picker-dist/js/bootstrap-datepicker.min.js"></script>
@@ -211,4 +219,6 @@
         });
     })(jQuery);
     /* http://www.bootply.com/nZaxpxfiXz */
+
+    
 </script>
