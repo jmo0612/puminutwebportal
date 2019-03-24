@@ -220,5 +220,67 @@
     })(jQuery);
     /* http://www.bootply.com/nZaxpxfiXz */
 
+
+
+    $('.jmocaldate').mouseover(function(){
+        $(this).click();
+    });
+
+    $('.jmocaldate').mouseout(function(){
+        $('#tt').css("visibility","hidden");
+        $('#ttKet1').text('');
+        $('#ttKet2').text('');
+        $('#ttKet3').text('');
+        
+    });
+
+    $('.jmocaldate').click(function(){
+        var myId=$(this).attr("id");
+        var ind=myId.substr(3,myId.length+1);
+        var jam=$('#jam'+ind).val();
+        var jamT=$('#jamTarget'+ind).val();
+        if(jam=='Tidak Hadir')jam='-';
+        var tmp=jam;
+
+        
+        
+        
+        $('#ttKet3').text($('#ket'+ind).val());
+        if($('#lbr'+ind).val()==1){
+            
+            tmp='Libur';
+        }else{
+            $('#ttKet2').text('('+jamT+')');
+        }
+        $('#ttKet1').text(tmp);
+        
+
+        $('#tt').css("visibility","visible");
+        $('#tt').css("border-radius","15px");
+        
+        var n=$(this).attr("name");
+
+        var t=$(this).offset().top-$("#tt").height()+5;
+        var radT="bottom";
+        if(n.substr(0,3)=="bwh"){
+            t=$(this).offset().top+$(this).height()-5;
+            radT="top";
+        }
+        
+
+        var l=$(this).offset().left-$("#tt").width()+5;
+        var radL="right";
+        if(n.substr(4,6)=="kn"){
+            l=$(this).offset().left+$(this).width()-5;
+            radL="left";
+        }
+
+        $('#tt').css("border-"+radT+"-"+radL+"-radius","0px");
+
+        $('#tt').offset({
+            left:l,
+            top:t
+        });
+    });
     
 </script>

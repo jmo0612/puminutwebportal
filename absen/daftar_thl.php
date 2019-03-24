@@ -3,7 +3,28 @@
     if(getPost("genThn")){
         $dThn=getPost("genThn");
         $dBln=getPost("genBln");
-        $sqlLook="select * from tb_absen_thl";
+
+        $sqlLook="select tb_absen_thl_bulan.tahun as tahun,
+                    tb_absen_thl_bulan.bln as bln,
+                    tb_absen_thl.id_thl as id_thl,
+                    tb_absen_thl_bulan.kd_prog as kd_prog,
+                    tb_absen_thl_bulan.kd_keg as kd_keg,
+                    tb_absen_thl.nm_thl as nm_thl,
+                    tb_absen_thl_bulan.jlh_gaji as jlh_gaji,
+                    tb_absen_thl.non_aktif_thl as non_aktif_thl,
+                    tb_absen_thl.jlh_gaji as jlh_gaji,
+                    tb_prog.ket_program as ket_program,
+                    tb_keg.ket_keg as ket_keg 
+                    from tb_absen_thl
+                    LEFT JOIN
+                    tb_absen_thl_bulan
+                    JOIN tb_keg
+                    JOIN tb_prog
+                    ON(tb_prog.tahun=tb_keg.tahun AND tb_prog.kd_prog=tb_keg.kd_keg)
+                    ON(tb_keg.tahun=tb_absen_thl_bulan.tahun AND tb_keg.kd_prog=tb_absen_thl_bulan.kd_prog AND tb_keg.kd_keg=tb_absen_thl_bulan.kd_keg)
+                    ON(tb_absen_thl_bulan.id_thl=tb_absen_thl.id_thl)
+                    WHERE tb_absen_thl_bulan.tahun='".$dThn."' AND tb_absen_thl_bulan.bln='".$dBln."'
+                    ";
         $resLook=$con->query($sqlLook);
         if($resLook->num_rows>0){
             $sqlGen="";
@@ -12,7 +33,7 @@
                 $sqlGen.="('".$dThn."','".$dBln."','".$rowLook["id_thl"]."','".$rowLook["nm_thl"]."','".$rowLook["non_aktif_thl"]."')";
             }
             if($sqlGen!=""){
-                $sqlGen="insert into tb_absen_thl_bulan(thn,bln,id_thl,nm_thl,nonaktif_thl) values".$sqlGen;
+                $sqlGen="insert into tb_absen_thl_bulan(tahun,bln,id_thl,kd_prog,kd_keg,nm_thl,jlh_gaji,nonaktif_thl,ket_program,ket_keg) values".$sqlGen;
                 $con->query($sqlGen);
             }
             
@@ -68,7 +89,9 @@
 
     
 
-    $sql="select * from tb_absen_thl_bulan where thn='".$dThn."' and bln='".$dBln."' order by nm_thl asc";
+    $sql="select * from tb_absen_thl_bulan where tahun='".$dThn."' and bln='".$dBln."' order by nm_thl asc";
+
+    
 
     //echo $sql;
     $res=$con->query($sql);
