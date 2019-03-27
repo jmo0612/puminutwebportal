@@ -30,7 +30,7 @@
     }
 
     $fltr1="cast(`puprarsip`.`tb_absen_attlog`.`time_second` as date)='".$curDateDBStr."'";
-    $fltr2="`tgl_kerja`='". $curDateDBStr ."' and `tgl_kerja`<='".date("Y-m-d")."' and `is_libur`='0' and `non_aktif_thl`='0'";
+    $fltr2="`tgl_kerja`='". $curDateDBStr ."' and `tgl_kerja`<='".date("Y-m-d")."'";
 
     $sql="select `q_attlog_unfinal`.`tgl_kerja` AS `tgl_kerja`,`q_attlog_unfinal`.`id_thl` AS `id_thl`,`q_attlog_unfinal`.`nm_thl` AS `nm_thl`,`q_attlog_unfinal`.`jam` AS `jam`,`q_attlog_unfinal`.`kode_rule` AS `kode_rule`,`q_attlog_unfinal`.`is_libur` AS `is_libur`,`q_attlog_unfinal`.`non_aktif_thl` AS `non_aktif_thl`,sum(`q_attlog_unfinal`.`red_add`) AS `red_add` from 
 	(select `q_attlog_main`.`tgl_kerja` AS `tgl_kerja`,`q_attlog_main`.`id_thl` AS `id_thl`,`q_attlog_main`.`id_det_status` AS `id_det_status`,`q_attlog_main`.`is_libur` AS `is_libur`,`q_attlog_main`.`jam_masuk` AS `jam_masuk`,`q_attlog_main`.`jam_keluar` AS `jam_keluar`,`q_attlog_main`.`ket_tgl_kerja` AS `ket_tgl_kerja`,`q_attlog_main`.`final` AS `final`,`q_attlog_main`.`nm_thl` AS `nm_thl`,`q_attlog_main`.`non_aktif_thl` AS `non_aktif_thl`,`q_attlog_main`.`masuk` AS `masuk`,`q_attlog_main`.`keluar` AS `keluar`,`q_attlog_main`.`kode_rule` AS `kode_rule`,`q_attlog_main`.`ket_detstatus_rule` AS `ket_detstatus_rule`,`q_attlog_main`.`kode_status` AS `kode_status`,`q_attlog_main`.`ket_det_status` AS `ket_det_status`,`q_attlog_main`.`max_per_periode` AS `max_per_periode`,`q_attlog_main`.`min_per_periode` AS `min_per_periode`,`q_attlog_main`.`potongan_bef_min` AS `potongan_bef_min`,`q_attlog_main`.`potongan_betw_min_max` AS `potongan_betw_min_max`,`q_attlog_main`.`potongan_aft_max` AS `potongan_aft_max`,`q_attlog_main`.`kinerja` AS `kinerja`,`q_attlog_main`.`automatic_status` AS `automatic_status`,`q_attlog_main`.`override_value` AS `override_value`,`q_attlog_main`.`red_add` AS `red_add`,`q_attlog_main`.`ket_status` AS `ket_status`,`q_attlog_main`.`potong` AS `potong`,`q_attlog_main`.`total_status` AS `total_status`,`q_attlog_main`.`total_hari_kerja` AS `total_hari_kerja`,`q_attlog_main`.`det_status_ke` AS `det_status_ke`,`q_attlog_main`.`potongan` AS `potongan`,`q_attlog_main`.`jam` AS `jam` from 
@@ -45,12 +45,12 @@
 						left join 
 							(select cast(`puprarsip`.`tb_absen_attlog`.`time_second` as date) AS `the_date`,`puprarsip`.`tb_absen_attlog`.`id_thl` AS `id_thl`,max(`puprarsip`.`tb_absen_attlog`.`time_second`) AS `sore` from `puprarsip`.`tb_absen_attlog` WHERE ".$fltr1." group by cast(`puprarsip`.`tb_absen_attlog`.`time_second` as date),`puprarsip`.`tb_absen_attlog`.`id_thl`) AS `q_check_out`
 						on(((`q_check_in`.`the_date` = `q_check_out`.`the_date`) and (`q_check_in`.`id_thl` = `q_check_out`.`id_thl`) and (`q_check_in`.`pagi` <> `q_check_out`.`sore`))))) AS `q_att_data`
-					on(((`q_all_date`.`tgl_kerja` = `q_att_data`.`the_date`) and (`q_all_date`.`id_thl` = `q_att_data`.`id_thl`))))) AS `q_attlog`
-				join `puprarsip`.`tb_absen_detstatus_rule` on((`puprarsip`.`tb_absen_detstatus_rule`.`kode_rule` = `q_attlog`.`kode_rule`))) join `puprarsip`.`tb_absen_detail_status` on((`puprarsip`.`tb_absen_detail_status`.`id_det_status` = `puprarsip`.`tb_absen_detstatus_rule`.`id_det_status`))) join `puprarsip`.`tb_absen_status` on((`puprarsip`.`tb_absen_status`.`kode_status` = `puprarsip`.`tb_absen_detail_status`.`kode_status`)))) AS `q_attlog_detail`
-			) AS `q_attlog_override_value`
-		) AS `q_attlog_main`
-	where (`q_attlog_main`.`final` = '0')) AS `q_attlog_unfinal` 
-WHERE ".$fltr2."
+					on(((`q_all_date`.`tgl_kerja` = `q_att_data`.`the_date`) and (`q_all_date`.`id_thl` = `q_att_data`.`id_thl`)))) where ".$fltr2.") AS `q_attlog`
+				join `puprarsip`.`tb_absen_detstatus_rule` on((`puprarsip`.`tb_absen_detstatus_rule`.`kode_rule` = `q_attlog`.`kode_rule`))) join `puprarsip`.`tb_absen_detail_status` on((`puprarsip`.`tb_absen_detail_status`.`id_det_status` = `puprarsip`.`tb_absen_detstatus_rule`.`id_det_status`))) join `puprarsip`.`tb_absen_status` on((`puprarsip`.`tb_absen_status`.`kode_status` = `puprarsip`.`tb_absen_detail_status`.`kode_status`))) where ".$fltr2.") AS `q_attlog_detail`
+			where ".$fltr2.") AS `q_attlog_override_value`
+		where ".$fltr2.") AS `q_attlog_main`
+	where (`q_attlog_main`.`final` = '0' and ".$fltr2.")) AS `q_attlog_unfinal` 
+WHERE ".$fltr2." and `is_libur`='0' and `non_aktif_thl`='0'
 group by `q_attlog_unfinal`.`tgl_kerja`,`q_attlog_unfinal`.`id_thl`,`q_attlog_unfinal`.`kode_rule`
 ORDER by tgl_kerja asc, nm_thl ASC
 ";
