@@ -135,7 +135,7 @@
                 if(getGet("p")=="dhAll"){
                     include 'view_att_all.php';
                 }elseif(getGet("p")=="rDh"){
-                    //include 'view_att_all.php';
+                    include 'view_att_rekap.php';
                 }elseif(getGet("p")=="rGj"){
                     //include 'view_att_all.php';
                 }elseif(getGet("p")=="adAl"){
@@ -143,7 +143,7 @@
                 }elseif(getGet("p")=="detHk"){
                     if($admAbsen==1)include 'det_kalender.php';
                 }elseif(getGet("p")=="detAtt"){
-                    if($admAbsen==1)include 'det_att.php';
+                    include 'det_att.php';
                 }elseif(getGet("p")=="dfThl"){
                     if($admAbsen==1)include 'daftar_thl.php';
                 }else{
