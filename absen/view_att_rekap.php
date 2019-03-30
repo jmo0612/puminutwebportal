@@ -82,16 +82,16 @@
 
 
     //$sel="";
-    $sqlD="select * from tb_absen_status";
+    $sqlD="select * from tb_absen_status order by urt_status asc";
     $resD=$con->query($sqlD);
     if($resD->num_rows>0){
         while($rowD=$resD->fetch_assoc()){
             $theStatus[$dNum]=$rowD["kode_status"];
             $dNum++;
             $stm="IF(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',kali_pot,'') SEPARATOR '')='','-',GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',kali_pot,'') SEPARATOR '')) as "."kaliS_".$rowD["kode_status"];
-            $stm.=", IF(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',CONCAT(tot_potongan,'%'),'') SEPARATOR '')='0%','-',GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',CONCAT(tot_potongan,'%'),'') SEPARATOR '')) as "."totS_".$rowD["kode_status"];
-            $stm.=", IF(CONCAT(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',ket_potongan,'') SEPARATOR ''),'')='','-',CONCAT(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',ket_potongan,'') SEPARATOR ''),'')) as "."ketS_".$rowD["kode_status"];
-            $stm.=", IF(SUM(tot_potongan)=0,'-',SUM(tot_potongan)) as totPot";
+            $stm.=", IF(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',CONCAT(tot_potongan,'%'),'') SEPARATOR '')='','0%',GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',CONCAT(tot_potongan,'%'),'') SEPARATOR '')) as "."totS_".$rowD["kode_status"];
+            $stm.=", IF(CONCAT(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',ket_potongan,'') SEPARATOR ''),'')='','0x0% = 0%',CONCAT(GROUP_CONCAT(IF(kode_status='".$rowD["kode_status"]."',ket_potongan,'') SEPARATOR ''),'')) as "."ketS_".$rowD["kode_status"];
+            $stm.=", CONCAT(SUM(tot_potongan),'%') as totPot";
             //$stm=", count(IF(kode_status='".$rowD["kode_status"]."' and is_libur='0',1,NULL)) as "."Status_".$rowD["kode_status"];
             //$stm.=", GROUP_CONCATen(IF(tgl_kerja='".$rowD["tgl_kerja"]."',red_add,'') SEPARATOR '') as "."R".$rowD["tgl"];
             //$stm.=", GROUP_CONCAT(IF(tgl_kerja='".$rowD["tgl_kerja"]."',kode_rule,'') SEPARATOR '') as "."S".$rowD["tgl"];
@@ -213,7 +213,7 @@
                 for($i=0;$i<$dNum;$i++){
             ?>
             <td style="text-align:center"><?php echo $row["totS_".$theStatus[$i]]; ?></td>
-            <td style="text-align:center"><?php echo $row["ketS_".$theStatus[$i]]; ?></td>
+            <td><?php echo $row["ketS_".$theStatus[$i]]; ?></td>
             <?php
                 }
             ?>
