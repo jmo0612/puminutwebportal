@@ -132,6 +132,33 @@
     //$sql=qtb_det_pot_grouped($fltr1,$fltr2,$fltr3,$fltr4);
     //echo $sql;
     $res=$con->query($sql);
+
+    $pagePortrait=false;
+    $totalCol=$dNum*3+4;
+    $importantColW=array($dNum+1);
+
+
+    $importantColW[0]=(20/100)*30;
+    for($i=1;$i<$dNum+1;$i++){
+        $importantColW[$i]=(75/$dNum)/100*70;
+    }
+
+    $pageW=550;
+    $pageH=900;
+    
+    $scale=1060/900;
+    $pageW=(int)floor($scale*$pageW);
+    $pageH=(int)floor($scale*$pageH);
+    if(!$pagePortrait){
+        $tmpPage=$pageW;
+        $pageW=$pageH;
+        $pageH=$tmpPage;
+    }
+    for($i=0;$i<sizeof($importantColW);$i++){
+        $importantColW[$i]=(int)floor($importantColW[$i]*$pageW/100);
+    }
+    $wLeft=$pageW-array_sum($importantColW);
+    $defW=floor($wLeft/($totalCol-sizeof($importantColW)));
     
 ?>
 
@@ -156,38 +183,49 @@
             </li>
         </ul>
     </nav>
+    <div style="text-align:left">
+        <form action="rep_rekap.php" method="post" target="_blank">
+            <input name="contentRep" id="contentRep" type="hidden">
+            <input name="tahun" id="tahun" type="hidden" value="<?php echo $dThn; ?>">
+            <input name="bulan" id="bulan" type="hidden" value="<?php echo $dBln; ?>">
+            <span>Ukuran Huruf: </span><input name="font" id="font" type="number" value="7" style="width:50px">
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-print"></span><span style="margin:5px">Cetak</span></button>
+        </form>
+    </div>
 </div>
 
+<div id="pdfRep">
+<div>
 <table class="table table-striped table-bordered table-fit">
     <thead>
         <tr>
-            <th rowspan="3">#</th>
-            <th rowspan="3">Nama</th>
-            <th colspan="<?php echo $dNum+1; ?>" style="text-align:center">KEHADIRAN</th>
-            <th colspan="<?php echo $dNum*2+1; ?>" style="text-align:center">POTONGAN</th>
+            <th rowspan="3" width="<?php echo $defW; ?>"><strong>#</strong></th>
+            <th rowspan="3" width="<?php echo $importantColW[0]; ?>"><strong>Nama</strong></th>
+            <th width="<?php echo $defW*($dNum+1); ?>" colspan="<?php echo $dNum+1; ?>" style="text-align:center"><strong>KEHADIRAN</strong></th>
+            <th width="<?php echo ($defW*($dNum+1))+($importantColW[2]*$dNum); ?>" colspan="<?php echo $dNum*2+1; ?>" style="text-align:center"><strong>POTONGAN</strong></th>
         </tr>
         <tr>
-            <th rowspan="2" style="text-align:center;vertical-align:middle">Hari<br>Kerja</th>
+            <th width="<?php echo $defW; ?>" rowspan="2" style="text-align:center;vertical-align:middle"><strong>Hari</strong><br><strong>Kerja</strong></th>
             <?php
                 for($i=0;$i<$dNum;$i++){
             ?>
-            <th rowspan="2" style="text-align:center;vertical-align:middle"><?php echo $theStatus[$i]; ?></th>
+            <th width="<?php echo $defW; ?>" rowspan="2" style="text-align:center;vertical-align:middle"><strong><?php echo $theStatus[$i]; ?></strong></th>
             <?php
                 }
                 for($i=0;$i<$dNum;$i++){
             ?>
-            <th colspan="2" style="text-align:center"><?php echo $theStatus[$i]; ?></th>
+            <th width="<?php echo $defW+$importantColW[1]; ?>" colspan="2" style="text-align:center"><strong><?php echo $theStatus[$i]; ?></strong></th>
             <?php
                 }
             ?>
-            <th rowspan="2" style="text-align:center;vertical-align:middle">Total<br>Potongan</th>
+            <th width="<?php echo $defW; ?>" rowspan="2" style="text-align:center;vertical-align:middle"><strong>Total</strong><br><strong>Pot</strong></th>
         </tr>
         <tr>
             <?php
                 for($i=0;$i<$dNum;$i++){
             ?>
-            <th style="text-align:center">Pot</th>
-            <th style="text-align:center">Ket</th>
+            <th width="<?php echo $defW; ?>" style="text-align:center"><strong>Pot</strong></th>
+            <th width="<?php echo $importantColW[1]; ?>" style="text-align:center"><strong>Ket</strong></th>
             <?php
                 }
             ?>
@@ -201,23 +239,23 @@
             //echo $row["nm_thl"]." --------> ".$row["kode_rule"]."<br>";
             ?>
         <tr>
-            <th scope="row"><?php echo $urt; ?></td>
-            <td><?php echo $row["nm_thl"]; ?></td>
-            <td style="text-align:center"><?php echo $row["total_hari_kerja"]; ?></td>
+            <th width="<?php echo $defW; ?>" scope="row"><?php echo $urt; ?></td>
+            <td width="<?php echo $importantColW[0]; ?>"><?php echo $row["nm_thl"]; ?></td>
+            <td width="<?php echo $defW; ?>" style="text-align:center"><?php echo $row["total_hari_kerja"]; ?></td>
             <?php
                 for($i=0;$i<$dNum;$i++){
             ?>
-            <td style="text-align:center"><?php echo $row["kaliS_".$theStatus[$i]]; ?></td>
+            <td width="<?php echo $defW; ?>" style="text-align:center"><?php echo $row["kaliS_".$theStatus[$i]]; ?></td>
             <?php
                 }
                 for($i=0;$i<$dNum;$i++){
             ?>
-            <td style="text-align:center"><?php echo $row["totS_".$theStatus[$i]]; ?></td>
-            <td><?php echo $row["ketS_".$theStatus[$i]]; ?></td>
+            <td width="<?php echo $defW; ?>" style="text-align:center"><?php echo $row["totS_".$theStatus[$i]]; ?></td>
+            <td width="<?php echo $importantColW[1]; ?>"><?php echo $row["ketS_".$theStatus[$i]]; ?></td>
             <?php
                 }
             ?>
-            <td style="text-align:center"><?php echo $row["totPot"]; ?></td>
+            <td width="<?php echo $defW; ?>" style="text-align:center"><?php echo $row["totPot"]; ?></td>
         </tr>    
             <?php
             $urt++;
@@ -226,4 +264,102 @@
 ?>    
     </tbody>
 </table>
+</div>
+</div>
      
+
+<?php
+
+
+    $sqlKop="select * from tb_absen_kop where id_kop='1'";
+    $resKop=$con->query($sqlKop);
+    if($resKop->num_rows>0){
+        $rowKop=$resKop->fetch_assoc();
+
+        $pageWKop=$pageW-(30/100*$pageW);
+
+?>
+<div id="pdfKop" style="visibility:hidden">
+    <table nobr="true" align="center">
+        <tr>
+            <td style="border:1px solid white" rowspan="4" align="right" width="<?php echo ((int)45/100*$pageWKop); ?>"><img src="images/logo.png" width="60" height="55"></td>
+            <td style="border:1px solid white" align="center" width="<?php echo ($pageWKop-((int)45/100*$pageWKop)); ?>">&nbsp</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white;font-size:10pt" align="center"><h5><?php echo $rowKop["kop1"]; ?></h5></td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white;font-size:10pt" align="center"><h4><?php echo $rowKop["kop2"]; ?></h4></td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white;font-size:10pt" align="center"><small><i><?php echo $rowKop["kop3"]; ?><i></small></td>
+        </tr>
+    </table>
+    <hr>
+    <div align="center" >
+        <h5 style="font-size:10pt">REKAPITULASI KEHADIRAN<br>
+        TENAGA HARIAN LEPAS<br>
+        BULAN <?php echo strtoupper(dateMonth($curDateDBStr));?></h5>
+    </div>
+</div>
+<?php
+    }
+?>
+
+<?php
+
+
+    $sqlTT="SELECT 
+	`tb_absen_tanda_tangan`.`kd_jab_tt` AS `kd_jab`,
+    `tb_absen_tanda_tangan`.`nm_jab_tt` AS `nm_jab`,
+    `tb_absen_tanda_tangan`.`nip_pejabat` AS `nip_pejabat`,
+    `tb_pegawai`.`nm_pegawai` AS `nm_pegawai`
+FROM 
+	`tb_absen_tanda_tangan`,
+    `tb_pegawai`
+WHERE 
+	`tb_absen_tanda_tangan`.`nip_pejabat`=`tb_pegawai`.`id_pegawai` AND `tb_absen_tanda_tangan`.`kd_jab_tt`='KASUB_KEPEG'";
+    $resTT=$con->query($sqlTT);
+    if($resTT->num_rows>0){
+        $rowTT=$resTT->fetch_assoc();
+
+
+?>
+<div id="pdfTT" style="visibility:hidden;font-size:10pt" >
+    <div align="center">
+    <table nobr="true" align="center" style="font-size:10px">
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td align="center" style="border:1px solid white"><?php echo $rowTT['nm_jab']; ?></td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td style="border:1px solid white">&nbsp</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td style="border:1px solid white">&nbsp</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td style="border:1px solid white">&nbsp</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td style="border:1px solid white">&nbsp</td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td align="center" style="border:1px solid white"><strong><?php echo $rowTT['nm_pegawai']; ?></strong></td>
+        </tr>
+        <tr>
+            <td style="border:1px solid white">&nbsp</td>
+            <td align="center" style="border:1px solid white">NIP. <?php echo $rowTT['nip_pejabat']; ?></td>
+        </tr>
+        
+    </table>
+    </div>
+</div>
+<?php
+    }
+?>

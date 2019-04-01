@@ -135,7 +135,7 @@
                 if(getGet("p")=="dhAll"){
                     include 'view_att_all.php';
                 }elseif(getGet("p")=="rDh"){
-                    include 'view_att_rekap.php';
+                    include 'view_att_rekap_tmp.php';
                 }elseif(getGet("p")=="rGj"){
                     //include 'view_att_all.php';
                 }elseif(getGet("p")=="adAl"){
@@ -216,6 +216,8 @@
                 $(this).parent().siblings().removeClass('open');
                 $(this).parent().toggleClass('open');
             });
+
+            $('#contentRep').val($('#pdfKop').html()+$('#pdfRep').html()+$('#pdfTT').html());
         });
     })(jQuery);
     /* http://www.bootply.com/nZaxpxfiXz */

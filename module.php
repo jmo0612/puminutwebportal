@@ -6,6 +6,11 @@
  * and open the template in the editor.
  */
 
+$hariComplete=array('Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu');
+$hari3L=array('Min','Sen','Sel','Rab','Kam','Jum','Sab');
+$bulanComplete=array('Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember');
+$bulan3L=array('Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des');
+
 Class JmoDateTime extends DateTime{
     public function JmoDateTime($time="now",$format="Y-m-d H:i:s"){
         if($time=="now") {
@@ -110,12 +115,19 @@ function money($num){
 }
 
 function dateMedium($date){
-    return strftime( "%d-%b-%Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    
+    //return strftime( "%d-%b-%Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
     //return date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d");
+    $dd=DateTime::createFromFormat("Y-m-d",$date);
+    global $bulan3L;
+    return date_format($dd,'d')."-".$bulan3L[(int)date_format($dd,'n')-1]."-".date_format($dd,'Y');
 }
 
 function dateComplete($date){
-    return strftime( "%A, %d %B %Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    //return strftime( "%A, %d %B %Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    $dd=DateTime::createFromFormat("Y-m-d",$date);
+    global $bulanComplete,$hariComplete;
+    return $hariComplete[(int)date_format($dd,'w')].", ".date_format($dd,'j')." ".$bulanComplete[(int)date_format($dd,'n')-1]." ".date_format($dd,'Y');
 }
 
 function dateClock($date){
@@ -129,11 +141,17 @@ function dateClockMin($date){
 }
 
 function dateDayWeekMin($date){
-    return strftime( "%a", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    //return strftime( "%a", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    $dd=DateTime::createFromFormat("Y-m-d",$date);
+    global $hari3L;
+    return $hari3L[(int)date_format($dd,'w')];
 }
 
 function dateMonth($date){
-    return strftime( "%B %Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    //return strftime( "%B %Y", strtotime(date_format(DateTime::createFromFormat("Y-m-d",$date), "Y-m-d")));
+    $dd=DateTime::createFromFormat("Y-m-d",$date);
+    global $bulanComplete;
+    return $bulanComplete[(int)date_format($dd,'n')-1]." ".date_format($dd,'Y');
 }
 
 function dateMonthInt($str){
